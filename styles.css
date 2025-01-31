@@ -1,0 +1,206 @@
+:root {
+  --bg-primary: #f0f0f0;
+  --bg-secondary: #ffffff;
+  --bg-toolbar: #f8f8f8;
+  --text-primary: #000000;
+  --border-color: #ddd;
+  --button-bg: #4CAF50;
+  --button-hover: #45a049;
+  --button-text: white;
+  --shadow-color: rgba(0,0,0,0.1);
+}
+
+[data-theme="dark"] {
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #2d2d2d;
+  --bg-toolbar: #333333;
+  --text-primary: #ffffff;
+  --border-color: #444;
+  --button-bg: #45a049;
+  --button-hover: #4CAF50;
+  --button-text: white;
+  --shadow-color: rgba(0,0,0,0.3);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto', sans-serif;
+  background: var(--bg-primary);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  color: var(--text-primary);
+}
+
+.editor {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-secondary);
+  padding: 10px;
+  box-shadow: none;
+  border-radius: 0;
+  max-width: none;
+  margin: 0;
+}
+
+.toolbar {
+  margin-bottom: 10px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 10px;
+  background: var(--bg-toolbar);
+  border-bottom: 1px solid var(--border-color);
+}
+
+button {
+  padding: 8px 16px;
+  background: var(--button-bg);
+  color: var(--button-text);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background: var(--button-hover);
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+select, input[type="number"] {
+  padding: 8px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+select:hover, input[type="number"]:hover {
+  border-color: var(--button-bg);
+}
+
+input[type="file"] {
+  padding: 8px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+input[type="file"]:hover {
+  background: var(--bg-toolbar);
+}
+
+.canvas-container {
+  flex: 1;
+  overflow: auto;
+  position: relative;
+  margin: 0;
+  padding: min(20px, 2vw);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-primary);
+  min-height: calc(100vh - 80px);
+}
+
+canvas {
+  background: var(--bg-secondary);
+  box-shadow: 0 0 10px var(--shadow-color);
+  max-width: 100%;
+  max-height: calc(100vh - 100px);
+  object-fit: contain;
+}
+
+.draggable {
+  position: absolute;
+  cursor: move;
+  user-select: none;
+}
+
+.selected {
+  outline: 2px solid var(--button-bg);
+  outline-offset: 2px;
+}
+
+.loading {
+  cursor: wait !important;
+}
+
+#darkModeToggle {
+  padding: 8px 12px;
+  font-size: 16px;
+}
+
+.light-mode-icon {
+  display: none;
+}
+
+.dark-mode-icon {
+  display: inline;
+}
+
+[data-theme="dark"] .light-mode-icon {
+  display: inline;
+}
+
+[data-theme="dark"] .dark-mode-icon {
+  display: none;
+}
+
+/* Style color picker */
+input[type="color"] {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background: var(--bg-secondary);
+  cursor: pointer;
+}
+
+/* Add specific font styling for the font select dropdown */
+#fontSelect option {
+  font-size: 14px;
+  padding: 8px;
+  min-height: 24px;
+}
+
+/* Style the font options to preview the actual fonts */
+#fontSelect option[value*="Roboto"] { font-family: 'Roboto', sans-serif; }
+#fontSelect option[value*="Pacifico"] { font-family: 'Pacifico', cursive; }
+#fontSelect option[value*="Press Start 2P"] { font-family: 'Press Start 2P', cursive; }
+#fontSelect option[value*="Comic Neue"] { font-family: 'Comic Neue', cursive; }
+#fontSelect option[value*="Abril Fatface"] { font-family: 'Abril Fatface', cursive; }
+#fontSelect option[value*="Dancing Script"] { font-family: 'Dancing Script', cursive; }
+#fontSelect option[value*="Lobster"] { font-family: 'Lobster', cursive; }
+#fontSelect option[value*="Permanent Marker"] { font-family: 'Permanent Marker', cursive; }
+#fontSelect option[value*="Playfair Display"] { font-family: 'Playfair Display', serif; }
+#fontSelect option[value*="Shadows Into Light"] { font-family: 'Shadows Into Light', cursive; }
+#fontSelect option[value*="Source Code Pro"] { font-family: 'Source Code Pro', monospace; }
+#fontSelect option[value*="Merriweather"] { font-family: 'Merriweather', serif; }
+
+/* Add styles for the border controls */
+.border-controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.border-controls input[type="number"] {
+  width: 60px;
+}

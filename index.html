@@ -1,0 +1,52 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Screenshot Editor</title>
+  <link href="styles.css" rel="stylesheet">
+  <!-- Preconnect to Google Fonts for faster loading -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Pacifico&family=Press+Start+2P&family=Comic+Neue&family=Abril+Fatface&family=Dancing+Script&family=Lobster&family=Permanent+Marker&family=Playfair+Display&family=Shadows+Into+Light&family=Source+Code+Pro&family=Merriweather&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="editor">
+    <div class="toolbar">
+      <input type="file" id="imageInput" accept="image/*" title="Choose base image">
+      <button id="addText" title="Add text overlay">Add Text</button>
+      <button id="addImage" title="Add image overlay">Add Overlay Image</button>
+      <button id="addBox" title="Add colored box">Add Box</button>
+      <select id="fontSelect" title="Choose font">
+        <option value="Roboto, sans-serif">Roboto</option>
+        <option value="Pacifico, cursive">Pacifico</option>
+        <option value="'Press Start 2P', cursive">Press Start 2P</option>
+        <option value="'Comic Neue', cursive">Comic</option>
+        <option value="'Abril Fatface', cursive">Abril Fatface</option>
+        <option value="'Dancing Script', cursive">Dancing Script</option>
+        <option value="'Lobster', cursive">Lobster</option>
+        <option value="'Permanent Marker', cursive">Permanent Marker</option>
+        <option value="'Playfair Display', serif">Playfair Display</option>
+        <option value="'Shadows Into Light', cursive">Shadows Into Light</option>
+        <option value="'Source Code Pro', monospace">Source Code Pro</option>
+        <option value="'Merriweather', serif">Merriweather</option>
+      </select>
+      <input type="color" id="colorPicker" value="#000000" title="Choose color">
+      <input type="number" id="fontSize" value="20" min="8" max="120" title="Font size">
+      <div class="border-controls">
+        <input type="color" id="borderColorPicker" value="#000000" title="Choose border color">
+        <input type="number" id="borderSize" value="0" min="0" max="20" title="Border size">
+      </div>
+      <button id="download" title="Download edited image">Download</button>
+      <button id="clear" title="Clear all elements">Clear</button>
+      <button id="darkModeToggle" title="Toggle dark mode">
+        <span class="light-mode-icon">🌙</span>
+        <span class="dark-mode-icon">☀️</span>
+      </button>
+    </div>
+    <div class="canvas-container">
+      <canvas id="canvas"></canvas>
+    </div>
+  </div>
+  <script src="editor.js"></script>
+</body>
+</html>
