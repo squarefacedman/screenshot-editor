@@ -15,6 +15,12 @@ class Editor {
     this.resizeHandle = null;
     this.resizeStartBounds = null;
     this.isShiftPressed = false;
+    this.isPainting = false;
+    this.brushSize = 5;
+    this.brushColor = '#000000';
+    this.lastPoint = null;
+    this.brushMode = false;
+    this.drawings = []; // Add array to store drawing data
     
     // Set initial canvas size
     this.canvas.width = 800;
@@ -38,10 +44,28 @@ class Editor {
     // Add color picker change event listener
     document.getElementById('colorPicker').addEventListener('input', (e) => this.updateSelectedTextColor(e.target.value));
     
-    this.canvas.addEventListener('mousedown', (e) => this.handleMouseDown(e));
-    this.canvas.addEventListener('mousemove', (e) => this.handleMouseMove(e));
-    this.canvas.addEventListener('mouseup', () => this.handleMouseUp());
-
+    this.canvas.addEventListener('mousedown', (e) => {
+      if (this.brushMode) {
+        this.startPainting(e);
+      } else {
+        this.handleMouseDown(e);
+      }
+    });
+    this.canvas.addEventListener('mousemove', (e) => {
+      if (this.brushMode) {
+        this.paint(e);
+      } else {
+        this.handleMouseMove(e);
+      }
+    });
+    this.canvas.addEventListener('mouseup', () => {
+      if (this.brushMode) {
+        this.stopPainting();
+      } else {
+        this.handleMouseUp();
+      }
+    });
+    
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Shift') {
         this.isShiftPressed = true;
@@ -73,6 +97,20 @@ class Editor {
     document.getElementById('borderColorPicker').addEventListener('input', (e) => this.updateSelectedTextBorder(e.target.value));
     document.getElementById('borderSize').addEventListener('input', (e) => this.updateSelectedTextBorderSize(e.target.value));
     document.getElementById('addBox').addEventListener('click', () => this.addBox());
+    document.getElementById('addBlurBox').addEventListener('click', () => this.addBlurBox());
+    document.getElementById('blurRadius').addEventListener('input', (e) => this.updateSelectedBlurRadius(e.target.value));
+    
+    document.getElementById('toggleBrush').addEventListener('click', () => this.toggleBrushMode());
+    document.getElementById('brushSize').addEventListener('input', (e) => this.updateBrushSize(e.target.value));
+    document.getElementById('brushColor').addEventListener('input', (e) => this.updateBrushColor(e.target.value));
+    
+    this.canvas.addEventListener('mouseleave', () => {
+      if (this.brushMode) {
+        this.stopPainting();
+      }
+    });
+    
+    document.getElementById('clearDrawings').addEventListener('click', () => this.clearDrawings());
   }
 
   async loadBaseImage(e) {
@@ -187,10 +225,9 @@ class Editor {
     const color = document.getElementById('colorPicker').value;
     const borderColor = document.getElementById('borderColorPicker').value;
     const borderSize = parseInt(document.getElementById('borderSize').value) || 0;
-    
     const boxSize = 100; // Default size for new boxes
     
-    this.elements.push({
+    const boxConfig = {
       type: 'box',
       x: this.canvas.width / 4,
       y: this.canvas.height / 4,
@@ -199,6 +236,23 @@ class Editor {
       color: color,
       borderColor: borderColor,
       borderSize: borderSize
+    };
+    
+    this.elements.push(boxConfig);
+    this.redraw();
+  }
+
+  addBlurBox() {
+    const boxSize = 100; // Default size for new boxes
+    const blurRadius = parseInt(document.getElementById('blurRadius').value) || 5;
+    
+    this.elements.push({
+      type: 'blur',
+      x: this.canvas.width / 4,
+      y: this.canvas.height / 4,
+      width: boxSize,
+      height: boxSize,
+      blurRadius: blurRadius
     });
     
     this.redraw();
@@ -219,11 +273,144 @@ class Editor {
         'Playfair Display',
         'Shadows Into Light',
         'Source Code Pro',
-        'Merriweather'
+        'Merriweather',
+        'Amatic SC',
+        'Anton',
+        'Architects Daughter',
+        'Bangers',
+        'Bebas Neue',
+        'Cairo',
+        'Caveat',
+        'Cinzel',
+        'Comfortaa',
+        'Courgette',
+        'Crimson Text',
+        'DM Sans',
+        'Dosis',
+        'Edu NSW ACT Foundation',
+        'Exo 2',
+        'Fjalla One',
+        'Great Vibes',
+        'Handlee',
+        'IBM Plex Sans',
+        'Indie Flower',
+        'Inter',
+        'Josefin Sans',
+        'Kanit',
+        'Kalam',
+        'Kaushan Script',
+        'Lato',
+        'League Spartan',
+        'Lilita One',
+        'Lora',
+        'Manrope',
+        'Montserrat',
+        'Mukta',
+        'Mulish',
+        'Noto Sans',
+        'Nunito',
+        'Open Sans',
+        'Oswald',
+        'Outfit',
+        'PT Sans',
+        'Poppins',
+        'Prompt',
+        'Quicksand',
+        'Raleway',
+        'Righteous',
+        'Roboto Condensed',
+        'Roboto Mono',
+        'Roboto Slab',
+        'Rubik',
+        'Sacramento',
+        'Space Grotesk',
+        'Space Mono',
+        'Spectral',
+        'Teko',
+        'Tilt Neon',
+        'Ubuntu',
+        'VT323',
+        'Varela Round',
+        'Work Sans',
+        'Yanone Kaffeesatz',
+        'Ysabeau',
+        'Zen Dots',
+        'Aguafina Script',
+        'Alegreya',
+        'Alfa Slab One',
+        'Allura',
+        'Anonymous Pro',
+        'Asap',
+        'Bad Script',
+        'Barlow',
+        'Bitter',
+        'Bungee',
+        'Cabin',
+        'Cardo',
+        'Chakra Petch',
+        'Cherry Cream Soda',
+        'Courier Prime',
+        'Covered By Your Grace',
+        'Creepster',
+        'Cuprum',
+        'Days One',
+        'Delius',
+        'Didact Gothic',
+        'Dokdo',
+        'Encode Sans',
+        'Fira Code',
+        'Fira Sans',
+        'Fredoka',
+        'Geologica',
+        'Gloria Hallelujah',
+        'Gochi Hand',
+        'Grape Nuts',
+        'Heebo',
+        'Hurricane',
+        'JetBrains Mono',
+        'Jost',
+        'Khand',
+        'Krona One',
+        'Lexend',
+        'Libre Baskerville',
+        'Life Savers',
+        'Londrina Solid',
+        'Love Light',
+        'Maven Pro',
+        'Merriweather Sans',
+        'Michroma',
+        'Monoton',
+        'Mr Dafoe',
+        'Notable',
+        'Nothing You Could Do',
+        'Nova Square',
+        'Oxygen',
+        'Paytone One',
+        'Plus Jakarta Sans',
+        'Poiret One',
+        'Prata',
+        'Prosto One',
+        'Questrial',
+        'Rajdhani',
+        'Rampart One',
+        'Red Hat Display',
+        'Reenie Beanie',
+        'Rock Salt',
+        'Russo One',
+        'Sigmar',
+        'Silkscreen',
+        'Sriracha',
+        'Staatliches',
+        'Tektur',
+        'Tourney',
+        'Urbanist',
+        'Vina Sans',
+        'Wallpoet',
+        'Yellowtail'
       ];
       
       fonts.forEach(font => {
-        this.ctx.font = `20px ${font}`;
+        this.ctx.font = `20px "${font}"`;
         this.ctx.fillText(' ', 0, 0);
       });
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -263,19 +450,35 @@ class Editor {
     if (this.baseImage) {
       this.ctx.drawImage(this.baseImage, 0, 0);
     }
+
+    // Create a temporary canvas for blur effects
+    const tempCanvas = document.createElement('canvas');
+    tempCanvas.width = this.canvas.width;
+    tempCanvas.height = this.canvas.height;
+    const tempCtx = tempCanvas.getContext('2d');
+    tempCtx.drawImage(this.canvas, 0, 0);
     
+    // Redraw all elements
     this.elements.forEach((element, index) => {
-      if (element.type === 'box') {
-        // Draw the box fill
-        this.ctx.fillStyle = element.color;
-        this.ctx.fillRect(element.x, element.y, element.width, element.height);
-        
-        // Draw the box border if borderSize > 0
-        if (element.borderSize > 0) {
-          this.ctx.strokeStyle = element.borderColor;
-          this.ctx.lineWidth = element.borderSize;
-          this.ctx.strokeRect(element.x, element.y, element.width, element.height);
-        }
+      if (element.type === 'blur') {
+        // Apply blur effect
+        this.ctx.save();
+        this.ctx.filter = `blur(${element.blurRadius}px)`;
+        this.ctx.drawImage(
+          tempCanvas,
+          element.x,
+          element.y,
+          element.width,
+          element.height,
+          element.x,
+          element.y,
+          element.width,
+          element.height
+        );
+        this.ctx.filter = 'none';
+        this.ctx.restore();
+      } else if (element.type === 'box') {
+        this.drawBox(element);
       } else if (element.type === 'text') {
         this.ctx.font = element.font;
         this.ctx.textBaseline = 'alphabetic'; 
@@ -297,6 +500,43 @@ class Editor {
         this.drawSelectionBox(element);
       }
     });
+    
+    // Redraw all drawings
+    this.drawings.forEach(drawing => {
+      this.ctx.lineCap = 'round';
+      this.ctx.lineJoin = 'round';
+      this.ctx.strokeStyle = drawing.color;
+      this.ctx.lineWidth = drawing.size;
+      
+      this.ctx.beginPath();
+      this.ctx.moveTo(drawing.startX, drawing.startY);
+      this.ctx.lineTo(drawing.endX, drawing.endY);
+      this.ctx.stroke();
+    });
+    
+    // Draw selection boxes
+    this.elements.forEach((element, index) => {
+      if (this.selectedElements.has(index)) {
+        this.drawSelectionBox(element);
+      }
+    });
+  }
+
+  drawBox(element) {
+    this.ctx.save();
+
+    // Draw the box fill
+    this.ctx.fillStyle = element.color;
+    this.ctx.fillRect(element.x, element.y, element.width, element.height);
+
+    // Draw border if specified
+    if (element.borderSize > 0) {
+      this.ctx.strokeStyle = element.borderColor;
+      this.ctx.lineWidth = element.borderSize;
+      this.ctx.strokeRect(element.x, element.y, element.width, element.height);
+    }
+
+    this.ctx.restore();
   }
 
   drawSelectionBox(element) {
@@ -460,6 +700,11 @@ class Editor {
       element.y = y + height; 
       element.fontSize = height;
       element.font = `${height}px ${element.fontFamily}`;
+    } else if (element.type === 'blur') {
+      element.x = x;
+      element.y = y;
+      element.width = width;
+      element.height = height;
     }
   }
 
@@ -484,6 +729,13 @@ class Editor {
         height: actualHeight
       };
     } else if (element.type === 'image') {
+      return {
+        x: element.x,
+        y: element.y,
+        width: element.width,
+        height: element.height
+      };
+    } else if (element.type === 'blur') {
       return {
         x: element.x,
         y: element.y,
@@ -637,13 +889,96 @@ class Editor {
     }
   }
 
+  updateSelectedBlurRadius(newRadius) {
+    let updated = false;
+    for (const index of this.selectedElements) {
+      const element = this.elements[index];
+      if (element.type === 'blur') {
+        element.blurRadius = parseInt(newRadius) || 0;
+        updated = true;
+      }
+    }
+    if (updated) {
+      this.redraw();
+    }
+  }
+
   clearElements() {
-    if (this.elements.length === 0 && !this.baseImage) return;
+    if (this.elements.length === 0 && !this.baseImage && this.drawings.length === 0) return;
     
     if (confirm('Are you sure you want to clear everything?')) {
       this.elements = [];
       this.selectedElements.clear();
       this.baseImage = null; // Clear the base image
+      this.drawings = []; // Clear drawings as well
+      this.redraw();
+    }
+  }
+
+  toggleBrushMode() {
+    this.brushMode = !this.brushMode;
+    document.getElementById('toggleBrush').classList.toggle('active');
+    this.canvas.style.cursor = this.brushMode ? 'crosshair' : 'default';
+  }
+
+  updateBrushSize(size) {
+    this.brushSize = parseInt(size);
+  }
+
+  updateBrushColor(color) {
+    this.brushColor = color;
+  }
+
+  startPainting(e) {
+    this.isPainting = true;
+    const rect = this.canvas.getBoundingClientRect();
+    this.lastPoint = {
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    };
+  }
+
+  paint(e) {
+    if (!this.isPainting || !this.brushMode) return;
+    
+    const rect = this.canvas.getBoundingClientRect();
+    const currentPoint = {
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    };
+    
+    // Store the drawing data
+    this.drawings.push({
+      startX: this.lastPoint.x,
+      startY: this.lastPoint.y,
+      endX: currentPoint.x,
+      endY: currentPoint.y,
+      color: this.brushColor,
+      size: this.brushSize
+    });
+    
+    this.ctx.lineCap = 'round';
+    this.ctx.lineJoin = 'round';
+    this.ctx.strokeStyle = this.brushColor;
+    this.ctx.lineWidth = this.brushSize;
+    
+    this.ctx.beginPath();
+    this.ctx.moveTo(this.lastPoint.x, this.lastPoint.y);
+    this.ctx.lineTo(currentPoint.x, currentPoint.y);
+    this.ctx.stroke();
+    
+    this.lastPoint = currentPoint;
+  }
+
+  stopPainting() {
+    this.isPainting = false;
+  }
+
+  clearDrawings() {
+    if (this.drawings.length === 0) return;
+    
+    if (confirm('Are you sure you want to clear all drawings?')) {
+      this.drawings = [];
       this.redraw();
     }
   }
