@@ -1,0 +1,423 @@
+:root {
+  --bg-primary: #f0f0f0;
+  --bg-secondary: #ffffff;
+  --bg-toolbar: #f8f8f8;
+  --text-primary: #000000;
+  --border-color: #ddd;
+  --button-bg: #4CAF50;
+  --button-hover: #45a049;
+  --button-text: white;
+  --shadow-color: rgba(0,0,0,0.1);
+}
+
+[data-theme="dark"] {
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #2d2d2d;
+  --bg-toolbar: #333333;
+  --text-primary: #ffffff;
+  --border-color: #444;
+  --button-bg: #45a049;
+  --button-hover: #4CAF50;
+  --button-text: white;
+  --shadow-color: rgba(0,0,0,0.3);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto', sans-serif;
+  background: var(--bg-primary);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  color: var(--text-primary);
+}
+
+.editor {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-secondary);
+  padding: 10px;
+  box-shadow: none;
+  border-radius: 0;
+  max-width: none;
+  margin: 0;
+}
+
+.toolbar {
+  margin-bottom: 10px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 10px;
+  background: var(--bg-toolbar);
+  border-bottom: 1px solid var(--border-color);
+}
+
+button {
+  padding: 8px 16px;
+  background: var(--button-bg);
+  color: var(--button-text);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background: var(--button-hover);
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+select, input[type="number"] {
+  padding: 8px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+select:hover, input[type="number"]:hover {
+  border-color: var(--button-bg);
+}
+
+input[type="file"] {
+  padding: 8px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+input[type="file"]:hover {
+  background: var(--bg-toolbar);
+}
+
+.canvas-container {
+  flex: 1;
+  overflow: auto;
+  position: relative;
+  margin: 0;
+  padding: min(20px, 2vw);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-primary);
+  min-height: calc(100vh - 80px);
+}
+
+canvas {
+  background: var(--bg-secondary);
+  box-shadow: 0 0 10px var(--shadow-color);
+  max-width: 100%;
+  max-height: calc(100vh - 100px);
+  object-fit: contain;
+}
+
+.draggable {
+  position: absolute;
+  cursor: move;
+  user-select: none;
+}
+
+.selected {
+  outline: 2px solid var(--button-bg);
+  outline-offset: 2px;
+}
+
+.loading {
+  cursor: wait !important;
+}
+
+#darkModeToggle {
+  padding: 8px 12px;
+  font-size: 16px;
+}
+
+#toggleBrush {
+  padding: 8px 12px;
+  font-size: 16px;
+}
+
+#toggleBrush.active {
+  background: var(--button-hover);
+  transform: scale(0.95);
+}
+
+.light-mode-icon {
+  display: none;
+}
+
+.dark-mode-icon {
+  display: inline;
+}
+
+[data-theme="dark"] .light-mode-icon {
+  display: inline;
+}
+
+[data-theme="dark"] .dark-mode-icon {
+  display: none;
+}
+
+/* Style color picker */
+input[type="color"] {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background: var(--bg-secondary);
+  cursor: pointer;
+}
+
+/* Add specific font styling for the font select dropdown */
+#fontSelect {
+  font-size: 14px;
+  max-width: 200px;
+}
+
+#fontSelect option {
+  padding: 4px 8px;
+  font-size: 14px;
+}
+
+/* Style each font option with its own font-family */
+#fontSelect option[value*="Roboto"] { font-family: 'Roboto', sans-serif; }
+#fontSelect option[value*="Pacifico"] { font-family: 'Pacifico', cursive; }
+#fontSelect option[value*="Press Start 2P"] { font-family: 'Press Start 2P', cursive; }
+#fontSelect option[value*="Comic Neue"] { font-family: 'Comic Neue', cursive; }
+#fontSelect option[value*="Abril Fatface"] { font-family: 'Abril Fatface', cursive; }
+#fontSelect option[value*="Dancing Script"] { font-family: 'Dancing Script', cursive; }
+#fontSelect option[value*="Lobster"] { font-family: 'Lobster', cursive; }
+#fontSelect option[value*="Permanent Marker"] { font-family: 'Permanent Marker', cursive; }
+#fontSelect option[value*="Playfair Display"] { font-family: 'Playfair Display', serif; }
+#fontSelect option[value*="Shadows Into Light"] { font-family: 'Shadows Into Light', cursive; }
+#fontSelect option[value*="Source Code Pro"] { font-family: 'Source Code Pro', monospace; }
+#fontSelect option[value*="Merriweather"] { font-family: 'Merriweather', serif; }
+#fontSelect option[value*="Amatic SC"] { font-family: 'Amatic SC', cursive; }
+#fontSelect option[value*="Anton"] { font-family: 'Anton', sans-serif; }
+#fontSelect option[value*="Architects Daughter"] { font-family: 'Architects Daughter', cursive; }
+#fontSelect option[value*="Bangers"] { font-family: 'Bangers', cursive; }
+#fontSelect option[value*="Bebas Neue"] { font-family: 'Bebas Neue', sans-serif; }
+#fontSelect option[value*="Cairo"] { font-family: 'Cairo', sans-serif; }
+#fontSelect option[value*="Caveat"] { font-family: 'Caveat', cursive; }
+#fontSelect option[value*="Cinzel"] { font-family: 'Cinzel', serif; }
+#fontSelect option[value*="Comfortaa"] { font-family: 'Comfortaa', sans-serif; }
+#fontSelect option[value*="Courgette"] { font-family: 'Courgette', cursive; }
+#fontSelect option[value*="Crimson Text"] { font-family: 'Crimson Text', serif; }
+#fontSelect option[value*="DM Sans"] { font-family: 'DM Sans', sans-serif; }
+#fontSelect option[value*="Dosis"] { font-family: 'Dosis', sans-serif; }
+#fontSelect option[value*="Edu NSW ACT Foundation"] { font-family: 'Edu NSW ACT Foundation', cursive; }
+#fontSelect option[value*="Exo 2"] { font-family: 'Exo 2', sans-serif; }
+#fontSelect option[value*="Fjalla One"] { font-family: 'Fjalla One', sans-serif; }
+#fontSelect option[value*="Great Vibes"] { font-family: 'Great Vibes', cursive; }
+#fontSelect option[value*="Handlee"] { font-family: 'Handlee', cursive; }
+#fontSelect option[value*="IBM Plex Sans"] { font-family: 'IBM Plex Sans', sans-serif; }
+#fontSelect option[value*="Indie Flower"] { font-family: 'Indie Flower', cursive; }
+#fontSelect option[value*="Inter"] { font-family: 'Inter', sans-serif; }
+#fontSelect option[value*="Josefin Sans"] { font-family: 'Josefin Sans', sans-serif; }
+#fontSelect option[value*="Kanit"] { font-family: 'Kanit', sans-serif; }
+#fontSelect option[value*="Kalam"] { font-family: 'Kalam', cursive; }
+#fontSelect option[value*="Kaushan Script"] { font-family: 'Kaushan Script', cursive; }
+#fontSelect option[value*="Lato"] { font-family: 'Lato', sans-serif; }
+#fontSelect option[value*="League Spartan"] { font-family: 'League Spartan', sans-serif; }
+#fontSelect option[value*="Lilita One"] { font-family: 'Lilita One', cursive; }
+#fontSelect option[value*="Lora"] { font-family: 'Lora', serif; }
+#fontSelect option[value*="Manrope"] { font-family: 'Manrope', sans-serif; }
+#fontSelect option[value*="Montserrat"] { font-family: 'Montserrat', sans-serif; }
+#fontSelect option[value*="Mukta"] { font-family: 'Mukta', sans-serif; }
+#fontSelect option[value*="Mulish"] { font-family: 'Mulish', sans-serif; }
+#fontSelect option[value*="Noto Sans"] { font-family: 'Noto Sans', sans-serif; }
+#fontSelect option[value*="Nunito"] { font-family: 'Nunito', sans-serif; }
+#fontSelect option[value*="Open Sans"] { font-family: 'Open Sans', sans-serif; }
+#fontSelect option[value*="Oswald"] { font-family: 'Oswald', sans-serif; }
+#fontSelect option[value*="Outfit"] { font-family: 'Outfit', sans-serif; }
+#fontSelect option[value*="PT Sans"] { font-family: 'PT Sans', sans-serif; }
+#fontSelect option[value*="Poppins"] { font-family: 'Poppins', sans-serif; }
+#fontSelect option[value*="Prompt"] { font-family: 'Prompt', sans-serif; }
+#fontSelect option[value*="Quicksand"] { font-family: 'Quicksand', sans-serif; }
+#fontSelect option[value*="Raleway"] { font-family: 'Raleway', sans-serif; }
+#fontSelect option[value*="Righteous"] { font-family: 'Righteous', sans-serif; }
+#fontSelect option[value*="Roboto Condensed"] { font-family: 'Roboto Condensed', sans-serif; }
+#fontSelect option[value*="Roboto Mono"] { font-family: 'Roboto Mono', monospace; }
+#fontSelect option[value*="Roboto Slab"] { font-family: 'Roboto Slab', serif; }
+#fontSelect option[value*="Rubik"] { font-family: 'Rubik', sans-serif; }
+#fontSelect option[value*="Sacramento"] { font-family: 'Sacramento', cursive; }
+#fontSelect option[value*="Space Grotesk"] { font-family: 'Space Grotesk', sans-serif; }
+#fontSelect option[value*="Space Mono"] { font-family: 'Space Mono', monospace; }
+#fontSelect option[value*="Spectral"] { font-family: 'Spectral', serif; }
+#fontSelect option[value*="Teko"] { font-family: 'Teko', sans-serif; }
+#fontSelect option[value*="Tilt Neon"] { font-family: 'Tilt Neon', sans-serif; }
+#fontSelect option[value*="Ubuntu"] { font-family: 'Ubuntu', sans-serif; }
+#fontSelect option[value*="VT323"] { font-family: 'VT323', monospace; }
+#fontSelect option[value*="Varela Round"] { font-family: 'Varela Round', sans-serif; }
+#fontSelect option[value*="Work Sans"] { font-family: 'Work Sans', sans-serif; }
+#fontSelect option[value*="Yanone Kaffeesatz"] { font-family: 'Yanone Kaffeesatz', sans-serif; }
+#fontSelect option[value*="Ysabeau"] { font-family: 'Ysabeau', sans-serif; }
+#fontSelect option[value*="Zen Dots"] { font-family: 'Zen Dots', cursive; }
+#fontSelect option[value*="Aguafina Script"] { font-family: 'Aguafina Script', cursive; }
+#fontSelect option[value*="Alegreya"] { font-family: 'Alegreya', serif; }
+#fontSelect option[value*="Alfa Slab One"] { font-family: 'Alfa Slab One', cursive; }
+#fontSelect option[value*="Allura"] { font-family: 'Allura', cursive; }
+#fontSelect option[value*="Anonymous Pro"] { font-family: 'Anonymous Pro', monospace; }
+#fontSelect option[value*="Asap"] { font-family: 'Asap', sans-serif; }
+#fontSelect option[value*="Bad Script"] { font-family: 'Bad Script', cursive; }
+#fontSelect option[value*="Barlow"] { font-family: 'Barlow', sans-serif; }
+#fontSelect option[value*="Bitter"] { font-family: 'Bitter', serif; }
+#fontSelect option[value*="Bungee"] { font-family: 'Bungee', cursive; }
+#fontSelect option[value*="Cabin"] { font-family: 'Cabin', sans-serif; }
+#fontSelect option[value*="Cardo"] { font-family: 'Cardo', serif; }
+#fontSelect option[value*="Chakra Petch"] { font-family: 'Chakra Petch', sans-serif; }
+#fontSelect option[value*="Cherry Cream Soda"] { font-family: 'Cherry Cream Soda', cursive; }
+#fontSelect option[value*="Courier Prime"] { font-family: 'Courier Prime', monospace; }
+#fontSelect option[value*="Covered By Your Grace"] { font-family: 'Covered By Your Grace', cursive; }
+#fontSelect option[value*="Creepster"] { font-family: 'Creepster', cursive; }
+#fontSelect option[value*="Cuprum"] { font-family: 'Cuprum', sans-serif; }
+#fontSelect option[value*="Days One"] { font-family: 'Days One', sans-serif; }
+#fontSelect option[value*="Delius"] { font-family: 'Delius', cursive; }
+#fontSelect option[value*="Didact Gothic"] { font-family: 'Didact Gothic', sans-serif; }
+#fontSelect option[value*="Dokdo"] { font-family: 'Dokdo', cursive; }
+#fontSelect option[value*="Encode Sans"] { font-family: 'Encode Sans', sans-serif; }
+#fontSelect option[value*="Fira Code"] { font-family: 'Fira Code', monospace; }
+#fontSelect option[value*="Fira Sans"] { font-family: 'Fira Sans', sans-serif; }
+#fontSelect option[value*="Fredoka"] { font-family: 'Fredoka', sans-serif; }
+#fontSelect option[value*="Geologica"] { font-family: 'Geologica', sans-serif; }
+#fontSelect option[value*="Gloria Hallelujah"] { font-family: 'Gloria Hallelujah', cursive; }
+#fontSelect option[value*="Gochi Hand"] { font-family: 'Gochi Hand', cursive; }
+#fontSelect option[value*="Grape Nuts"] { font-family: 'Grape Nuts', cursive; }
+#fontSelect option[value*="Heebo"] { font-family: 'Heebo', sans-serif; }
+#fontSelect option[value*="Hurricane"] { font-family: 'Hurricane', cursive; }
+#fontSelect option[value*="JetBrains Mono"] { font-family: 'JetBrains Mono', monospace; }
+#fontSelect option[value*="Jost"] { font-family: 'Jost', sans-serif; }
+#fontSelect option[value*="Khand"] { font-family: 'Khand', sans-serif; }
+#fontSelect option[value*="Krona One"] { font-family: 'Krona One', sans-serif; }
+#fontSelect option[value*="Lexend"] { font-family: 'Lexend', sans-serif; }
+#fontSelect option[value*="Libre Baskerville"] { font-family: 'Libre Baskerville', serif; }
+#fontSelect option[value*="Life Savers"] { font-family: 'Life Savers', cursive; }
+#fontSelect option[value*="Londrina Solid"] { font-family: 'Londrina Solid', cursive; }
+#fontSelect option[value*="Love Light"] { font-family: 'Love Light', cursive; }
+#fontSelect option[value*="Maven Pro"] { font-family: 'Maven Pro', sans-serif; }
+#fontSelect option[value*="Merriweather Sans"] { font-family: 'Merriweather Sans', sans-serif; }
+#fontSelect option[value*="Michroma"] { font-family: 'Michroma', sans-serif; }
+#fontSelect option[value*="Monoton"] { font-family: 'Monoton', cursive; }
+#fontSelect option[value*="Mr Dafoe"] { font-family: 'Mr Dafoe', cursive; }
+#fontSelect option[value*="Notable"] { font-family: 'Notable', sans-serif; }
+#fontSelect option[value*="Nothing You Could Do"] { font-family: 'Nothing You Could Do', cursive; }
+#fontSelect option[value*="Nova Square"] { font-family: 'Nova Square', cursive; }
+#fontSelect option[value*="Oxygen"] { font-family: 'Oxygen', sans-serif; }
+#fontSelect option[value*="Paytone One"] { font-family: 'Paytone One', sans-serif; }
+#fontSelect option[value*="Plus Jakarta Sans"] { font-family: 'Plus Jakarta Sans', sans-serif; }
+#fontSelect option[value*="Poiret One"] { font-family: 'Poiret One', cursive; }
+#fontSelect option[value*="Prata"] { font-family: 'Prata', serif; }
+#fontSelect option[value*="Prosto One"] { font-family: 'Prosto One', cursive; }
+#fontSelect option[value*="Questrial"] { font-family: 'Questrial', sans-serif; }
+#fontSelect option[value*="Rajdhani"] { font-family: 'Rajdhani', sans-serif; }
+#fontSelect option[value*="Rampart One"] { font-family: 'Rampart One', cursive; }
+#fontSelect option[value*="Red Hat Display"] { font-family: 'Red Hat Display', sans-serif; }
+#fontSelect option[value*="Reenie Beanie"] { font-family: 'Reenie Beanie', cursive; }
+#fontSelect option[value*="Rock Salt"] { font-family: 'Rock Salt', cursive; }
+#fontSelect option[value*="Russo One"] { font-family: 'Russo One', sans-serif; }
+#fontSelect option[value*="Sigmar"] { font-family: 'Sigmar', cursive; }
+#fontSelect option[value*="Silkscreen"] { font-family: 'Silkscreen', cursive; }
+#fontSelect option[value*="Sriracha"] { font-family: 'Sriracha', cursive; }
+#fontSelect option[value*="Staatliches"] { font-family: 'Staatliches', cursive; }
+#fontSelect option[value*="Tektur"] { font-family: 'Tektur', sans-serif; }
+#fontSelect option[value*="Tourney"] { font-family: 'Tourney', cursive; }
+#fontSelect option[value*="Urbanist"] { font-family: 'Urbanist', sans-serif; }
+#fontSelect option[value*="Vina Sans"] { font-family: 'Vina Sans', cursive; }
+#fontSelect option[value*="Wallpoet"] { font-family: 'Wallpoet', cursive; }
+#fontSelect option[value*="Yellowtail"] { font-family: 'Yellowtail', cursive; }
+
+/* Add styles for the border controls */
+.border-controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.border-controls input[type="number"] {
+  width: 60px;
+}
+
+/* Add styles for blur controls */
+#blurRadius {
+  width: 60px;
+}
+
+.blur-controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.brush-controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+#brushSize {
+  width: 60px;
+}
+
+.box-control {
+  display: none;
+}
+
+.gradient-control.show {
+  display: none;
+}
+
+.pattern-control.show {
+  display: none;
+}
+
+.shape-control.show {
+  display: none;
+}
+
+#boxTypeSelect {
+  display: none;
+}
+
+.gradient-control, .pattern-control, .shape-control {
+  display: none;
+}
+
+[data-box-type="gradient"] .gradient-control {
+  display: none;
+}
+
+[data-box-type="pattern"] .pattern-control {
+  display: none;
+}
+
+[data-box-type="shape"] .shape-control {
+  display: none;
+}
+
+#centerX, #centerY {
+  padding: 8px 12px;
+  font-size: 16px;
+}
+
+#centerX:hover, #centerY:hover {
+  background: var(--button-hover);
+}
+
+#centerX:active, #centerY:active {
+  transform: scale(0.95);
+}
